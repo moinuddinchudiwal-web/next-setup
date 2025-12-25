@@ -2,6 +2,7 @@ import { apiEndpoints } from "@/store/apiEndpoints";
 import { baseQuery } from "@/store/baseQuery";
 import { handleErrorResponse, handleSuccessResponse } from "@/store/hooks";
 import { GET, POST } from "@/store/http";
+import { removeCookieItem, setCookieItem } from "@/utils/cookies";
 import { removeLocalStorageItem, setLocalStorageItem } from "@/utils/localStorage";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import {
@@ -22,7 +23,11 @@ export const authApi = createApi({
       query: (body) => POST({ url: apiEndpoints.auth.login, body }),
       transformResponse: (response: any) => {
         const data: LoginResponse = response.data;
+
         setLocalStorageItem("USER_TOKEN", data.token);
+        setCookieItem("USER_TOKEN", data.token, { path: "/" });
+        setCookieItem("USER_ROLE", data.user.role, { path: "/" });
+
         handleSuccessResponse({ data, message: response.message });
         return data;
       },
@@ -34,7 +39,11 @@ export const authApi = createApi({
       query: (body) => POST({ url: apiEndpoints.auth.signup, body }),
       transformResponse: (response: any) => {
         const data: SignupResponse = response.data;
+
         setLocalStorageItem("USER_TOKEN", data.token);
+        setCookieItem("USER_TOKEN", data.token, { path: "/" });
+        setCookieItem("USER_ROLE", data.user.role, { path: "/" });
+
         handleSuccessResponse({ data, message: response.message });
         return data;
       },
@@ -54,6 +63,9 @@ export const authApi = createApi({
       query: () => POST({ url: apiEndpoints.auth.logout }),
       transformResponse: (response: any) => {
         removeLocalStorageItem("USER_TOKEN");
+        removeCookieItem("USER_TOKEN", { path: "/" });
+        removeCookieItem("USER_ROLE", { path: "/" });
+
         handleSuccessResponse({
           data: response,
           message: response.message || "Logged out successfully",

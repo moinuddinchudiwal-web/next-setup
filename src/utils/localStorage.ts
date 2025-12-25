@@ -1,3 +1,5 @@
+"use client";
+
 import { STORAGE_KEYS, StorageKey } from "@/config/storage";
 
 export const setLocalStorageItem = (key: StorageKey, value: any): void => {

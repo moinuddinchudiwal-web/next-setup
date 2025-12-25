@@ -1,5 +1,6 @@
 export const COOKIE_KEYS = {
   USER_TOKEN: "USER_TOKEN",
+  USER_ROLE: "USER_ROLE",
   USER_PREFERENCES: "USER_PREFERENCES",
 } as const;
 

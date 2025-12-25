@@ -1,5 +1,4 @@
 import { env } from "@/config/env";
-import { ROUTES } from "@/config/routes";
 import { HTTP_STATUS } from "@/config/statusCodes";
 import { logout } from "@/store/auth/authSlice";
 import { getLocalStorageItem, removeLocalStorageItem } from "@/utils/localStorage";
@@ -11,11 +10,9 @@ const rawBaseQuery = fetchBaseQuery({
   prepareHeaders: (headers) => {
     const token = getLocalStorageItem<string>("USER_TOKEN");
 
-    if (token) {
-      headers.set("Authorization", `Bearer ${token}`);
-    }
-
+    if (token) headers.set("Authorization", `Bearer ${token}`);
     headers.set("Content-Type", "application/json");
+
     return headers;
   },
 });
@@ -27,15 +24,16 @@ export const baseQuery: BaseQueryFn<
 > = async (args, api, extraOptions) => {
   const result = await rawBaseQuery(args, api, extraOptions);
 
-  if (
-    result.error?.status === HTTP_STATUS.UNAUTHORIZED ||
-    result.error?.status === HTTP_STATUS.FORBIDDEN
-  ) {
-    removeLocalStorageItem("USER_TOKEN");
-    api.dispatch(logout());
+  if (result.error) {
+    const status = result.error.status;
 
-    if (typeof window !== "undefined") {
-      window.location.href = ROUTES.LOGIN;
+    if (status === HTTP_STATUS.UNAUTHORIZED || status === HTTP_STATUS.FORBIDDEN) {
+      removeLocalStorageItem("USER_TOKEN");
+      api.dispatch(logout());
+
+      if (typeof window !== "undefined") {
+        window.location.href = "/login";
+      }
     }
   }
 
