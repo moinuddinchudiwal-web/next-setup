@@ -1,5 +1,6 @@
 import { authApi } from "@/store/auth/authApi";
 import authReducer from "@/store/auth/authSlice";
+import paginationReducer from "@/store/pagination/paginationSlice";
 import { productApi } from "@/store/product/productApi";
 import productReducer from "@/store/product/productSlice";
 import { configureStore } from "@reduxjs/toolkit";
@@ -7,6 +8,7 @@ import { configureStore } from "@reduxjs/toolkit";
 export const store = configureStore({
   reducer: {
     // feature slices
+    pagination: paginationReducer,
     product: productReducer,
     auth: authReducer,
 
