@@ -9,13 +9,12 @@ import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 type FormValues = {
-  email: string;
   password: string;
   confirmPassword: string;
   terms: boolean;
 };
 
-const Register = () => {
+const ResetPassword = () => {
   const router = useRouter();
 
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -28,7 +27,6 @@ const Register = () => {
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
-      email: "",
       password: "",
       confirmPassword: "",
       terms: false,
@@ -47,7 +45,7 @@ const Register = () => {
   };
 
   const onSubmit = (data: FormValues) => {
-    console.log("Signup Data:", data);
+    console.log("Reset Password Data:", data);
   };
 
   return (
@@ -72,54 +70,21 @@ const Register = () => {
       {/* RIGHT SIDE */}
       <div className="flex w-full md:w-3/5 items-center justify-end">
         <div className="w-full max-w-xl bg-white rounded-xl shadow-xl px-12 py-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2 text-center">Sign Up</h2>
-          <p className="text-gray-500 mb-8 text-center">Manage Your Social Campaigns</p>
-
-          <div className="flex flex-col md:flex-row gap-3 mb-8">
-            <Button
-              variant="outline"
-              className="md:flex-1 flex items-center justify-center gap-2"
+          <h2 className="text-3xl font-bold text-gray-900 mb-2 text-center">
+            Setup New Password
+          </h2>
+          <p className="text-gray-500 mb-8 text-center">
+            Have you already reset the password?
+            <span
+              className="text-primary font-medium ml-1 cursor-pointer"
+              onClick={() => router.push("./sign-in")}
             >
-              <img src="/icons/social/google-icon.svg" className="h-4 w-4" />
-              Sign in with Google
-            </Button>
-            <Button
-              variant="outline"
-              className="md:flex-1 flex items-center justify-center gap-2"
-            >
-              <img src="/icons/social/apple-black.svg" className="h-4 w-4" />
-              Sign in with Apple
-            </Button>
-          </div>
+              Sign in
+            </span>
+          </p>
 
-          <div className="flex items-center text-gray-300 mb-6">
-            <span className="grow border-t"></span>
-            <span className="mx-3 text-gray-400 text-sm">Or with email</span>
-            <span className="grow border-t"></span>
-          </div>
-
+          {/* Form */}
           <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
-            <Controller
-              name="email"
-              control={control}
-              rules={{
-                required: "Email is required",
-                pattern: {
-                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: "Enter a valid email",
-                },
-              }}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  type="email"
-                  placeholder="Email"
-                  required
-                  error={errors.email?.message}
-                />
-              )}
-            />
-
             <Controller
               name="password"
               control={control}
@@ -185,35 +150,28 @@ const Register = () => {
               render={({ field }) => (
                 <div className="flex items-center space-x-2">
                   <Checkbox
+                    id="terms"
                     checked={field.value}
                     onCheckedChange={field.onChange}
-                    id="terms"
                   />
                   <label htmlFor="terms" className="text-gray-700 text-sm">
-                    I Accept the <span className="text-primary font-medium">Terms</span>
+                    I Agree &
+                    <span className="text-primary font-medium ml-1">
+                      Terms and conditions.
+                    </span>
                   </label>
                 </div>
               )}
             />
 
             <Button type="submit" className="w-full">
-              Sign Up
+              Submit
             </Button>
           </form>
-
-          <p className="text-sm text-gray-500 text-center mt-6">
-            Already have an account?
-            <span
-              className="text-primary cursor-pointer font-medium ml-1"
-              onClick={() => router.push("./sign-in")}
-            >
-              Sign in
-            </span>
-          </p>
         </div>
       </div>
     </React.Fragment>
   );
 };
 
-export default Register;
+export default ResetPassword;

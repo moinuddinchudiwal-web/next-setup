@@ -11,7 +11,7 @@ export const handleSuccessResponse = <T extends { data: any; message?: string }>
   if (data?.message) {
     toast.success(data.message);
   }
-  return data.data;
+  return data?.data;
 };
 
 export const handleErrorResponse = (error: any) => {

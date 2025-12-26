@@ -1,6 +1,7 @@
 export interface User {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   role?: string;
 }
@@ -11,12 +12,12 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  token: string;
   user: User;
 }
 
 export interface SignupRequest {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
 }

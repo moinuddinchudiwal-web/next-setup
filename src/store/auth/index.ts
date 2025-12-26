@@ -1,4 +1,6 @@
+import { ROUTES } from "@/config/routes";
 import { useAppDispatch } from "@/store/hooks";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import {
@@ -11,12 +13,16 @@ import { logout, setUser } from "./authSlice";
 import { LoginRequest, SignupRequest } from "./authTypes";
 
 export const useLogin = () => {
+  const router = useRouter();
+
   const dispatch = useAppDispatch();
   const [login, { isLoading, error, data }] = useLoginMutation();
 
   const handleLogin = async (payload: LoginRequest) => {
     const result = await login(payload).unwrap();
+
     dispatch(setUser(result.user));
+    router.push(ROUTES.DASHBOARD);
     return result;
   };
 

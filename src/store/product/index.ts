@@ -1,4 +1,6 @@
+import { ENTITY_KEYS } from "@/config/entityKeys";
 import { useAppDispatch } from "@/store/hooks";
+import { usePagination } from "@/store/pagination/usePagination";
 import { setSelectedProduct } from "@/store/product/productSlice";
 import {
   useCreateProductMutation,
@@ -10,7 +12,10 @@ import {
 
 // Custom hook for get all products
 export const useGetProducts = () => {
-  const { data, error, isLoading, refetch } = useGetProductsQuery();
+  const { page, limit, setTotalItems } = usePagination(ENTITY_KEYS.PRODUCT);
+
+  const { data, error, isLoading, refetch } = useGetProductsQuery({ page, limit });
+
   return { products: data, loading: isLoading, error, refetch };
 };
 

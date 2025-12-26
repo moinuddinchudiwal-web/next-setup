@@ -3,7 +3,7 @@ import { baseQuery } from "@/store/baseQuery";
 import { handleErrorResponse, handleSuccessResponse } from "@/store/hooks";
 import { DELETE, GET, POST, PUT } from "@/store/http";
 import { createApi } from "@reduxjs/toolkit/query/react";
-import { Product } from "./productTypes";
+import { Product, ProductQueryParams } from "./productTypes";
 
 export const productApi = createApi({
   reducerPath: "productApi",
@@ -11,8 +11,8 @@ export const productApi = createApi({
   tagTypes: ["Product"],
   endpoints: (builder) => ({
     // Get all products
-    getProducts: builder.query<Product[], void>({
-      query: () => GET(apiEndpoints.product.getAll),
+    getProducts: builder.query<Product[], ProductQueryParams>({
+      query: (params) => GET({ url: apiEndpoints.product.getAll, params }),
       providesTags: ["Product"],
       transformResponse: handleSuccessResponse,
       transformErrorResponse: handleErrorResponse,
@@ -20,7 +20,7 @@ export const productApi = createApi({
 
     // Get single product by ID
     getProductById: builder.query<Product, string>({
-      query: (id) => GET(`${apiEndpoints.product.getById}/${id}`),
+      query: (id) => GET({ url: `${apiEndpoints.product.getById}/${id}` }),
       providesTags: ["Product"],
       transformResponse: handleSuccessResponse,
       transformErrorResponse: handleErrorResponse,
@@ -45,7 +45,7 @@ export const productApi = createApi({
 
     // Delete product
     deleteProduct: builder.mutation<{ success: boolean; id: string }, string>({
-      query: (id) => DELETE(`${apiEndpoints.product.delete}/${id}`),
+      query: (id) => DELETE({ url: `${apiEndpoints.product.delete}/${id}` }),
       invalidatesTags: ["Product"],
       transformResponse: handleSuccessResponse,
       transformErrorResponse: handleErrorResponse,

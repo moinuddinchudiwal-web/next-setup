@@ -22,14 +22,18 @@ export const authApi = createApi({
     login: builder.mutation<LoginResponse, LoginRequest>({
       query: (body) => POST({ url: apiEndpoints.auth.login, body }),
       transformResponse: (response: any) => {
-        const data: LoginResponse = response.data;
+        if (response?.accessToken) {
+          setLocalStorageItem("USER_TOKEN", response.accessToken);
+          setCookieItem("USER_TOKEN", response.accessToken, { path: "/" });
+        }
 
-        setLocalStorageItem("USER_TOKEN", data.token);
-        setCookieItem("USER_TOKEN", data.token, { path: "/" });
-        setCookieItem("USER_ROLE", data.user.role, { path: "/" });
-
-        handleSuccessResponse({ data, message: response.message });
-        return data;
+        if (response?.data?.role) {
+          setCookieItem("USER_ROLE", response.data.role, { path: "/" });
+        }
+        handleSuccessResponse({ data: response.data, message: response.message });
+        return {
+          user: response.data,
+        };
       },
       transformErrorResponse: handleErrorResponse,
     }),
@@ -52,7 +56,7 @@ export const authApi = createApi({
 
     // Get user profile
     getProfile: builder.query<User, void>({
-      query: () => GET(apiEndpoints.auth.profile),
+      query: () => GET({ url: apiEndpoints.auth.profile }),
       transformResponse: handleSuccessResponse,
       transformErrorResponse: handleErrorResponse,
       providesTags: ["Auth"],

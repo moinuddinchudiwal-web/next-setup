@@ -1,3 +1,5 @@
+import { BaseQueryParams } from "@/store/http";
+
 export interface Product {
   id: string;
   name: string;
@@ -7,4 +9,10 @@ export interface Product {
   stock?: number;
   createdAt?: string;
   updatedAt?: string;
+}
+
+export interface ProductQueryParams extends BaseQueryParams {
+  categoryId?: string;
+  minPrice?: number;
+  maxPrice?: number;
 }
